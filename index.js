@@ -43,6 +43,23 @@ async function run() {
             res.json(result);
         });
 
+        //POST: Find bookings by user email
+        app.post('/my-bookings', async (req, res) => {
+            const userEmail = req.body.email;
+            const query = { email: userEmail };
+            const products = await bookingCollection.find(query).toArray();
+            res.json(products);
+        });
+
+        //DELETE: Cancel Booking
+        app.delete('/booking/:id', async (req, res) => {
+            const id = req.params.id;
+            console.log(id);
+            const query = { _id: ObjectId(id) };
+            const result = await bookingCollection.deleteOne(query);
+            res.json(result);
+        });
+
     }
     finally {
         // await client.close();
