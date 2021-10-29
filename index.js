@@ -27,7 +27,7 @@ async function run() {
         })
 
         //GET: Get tour plans by Id
-        app.get('/tour-plans/:id', async (req, res) => {
+        app.get('/plan-details/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) }
             const result = await tourplanCollection.findOne(query);
@@ -49,3 +49,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log('Listening at:', port);
 })
+
+// git push heroku main
