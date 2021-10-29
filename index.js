@@ -18,13 +18,14 @@ async function run() {
         await client.connect();
         const database = client.db('wanderlust');
         const tourplanCollection = database.collection('tourplans');
+        const bookingCollection = database.collection('bookings');
 
         //GET: Get tour plans
         app.get('/tour-plans', async (req, res) => {
             const cursor = tourplanCollection.find({});
             const result = await cursor.toArray();
             res.send(result);
-        })
+        });
 
         //GET: Get tour plans by Id
         app.get('/plan-details/:id', async (req, res) => {
@@ -32,7 +33,15 @@ async function run() {
             const query = { _id: ObjectId(id) }
             const result = await tourplanCollection.findOne(query);
             res.json(result);
-        })
+        });
+
+        //POST: Book tourplan
+        app.post('/booking', async (req, res) => {
+            const bookingDetails = req.body;
+            console.log(bookingDetails);
+            const result = await bookingCollection.insertOne(bookingDetails);
+            res.json(result);
+        });
 
     }
     finally {
