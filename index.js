@@ -35,10 +35,16 @@ async function run() {
             res.json(result);
         });
 
+        //GET: Get all bookings
+        app.get('/booking', async (req, res) => {
+            const cursor = bookingCollection.find({});
+            const result = await cursor.toArray();
+            res.send(result);
+        });
+
         //POST: Book tourplan
         app.post('/booking', async (req, res) => {
             const bookingDetails = req.body;
-            console.log(bookingDetails);
             const result = await bookingCollection.insertOne(bookingDetails);
             res.json(result);
         });
@@ -51,10 +57,25 @@ async function run() {
             res.json(products);
         });
 
+        //PUT: Approve booking
+        app.put('/booking', async (req, res) => {
+            const updatedBooking = req.body;
+            console.log(updatedBooking);
+            const filter = { _id: ObjectId(updatedBooking.bookingId) };
+            const options = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    status: updatedBooking.status
+                },
+            };
+
+            const result = await bookingCollection.updateOne(filter, updateDoc, options);
+            res.json(result);
+        })
+
         //DELETE: Cancel Booking
         app.delete('/booking/:id', async (req, res) => {
             const id = req.params.id;
-            console.log(id);
             const query = { _id: ObjectId(id) };
             const result = await bookingCollection.deleteOne(query);
             res.json(result);
@@ -70,7 +91,6 @@ run().catch(console.dir)
 app.get('/', (req, res) => {
     res.send('Server Running')
 });
-
 
 app.listen(port, () => {
     console.log('Listening at:', port);
