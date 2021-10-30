@@ -42,6 +42,14 @@ async function run() {
             res.send(result);
         });
 
+        //POST: Post new tourplan
+        app.post('/tour-plans', async (req, res) => {
+            const newPlan = req.body;
+            console.log(newPlan)
+            const result = await tourplanCollection.insertOne(newPlan);
+            res.json(result);
+        });
+
         //POST: Book tourplan
         app.post('/booking', async (req, res) => {
             const bookingDetails = req.body;
